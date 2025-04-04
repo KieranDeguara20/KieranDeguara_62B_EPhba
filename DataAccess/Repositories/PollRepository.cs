@@ -1,16 +1,12 @@
 ﻿using DataAccess.DataContext;
+using Domain.Interfaces;
 using Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DataAccess.Repositories
 {
-    public class PollRepository
+    public class PollRepository : IPollRepository
     {
-        private PollDbContext context;
+        private readonly PollDbContext context;
 
         public PollRepository(PollDbContext _context)
         {
@@ -22,12 +18,13 @@ namespace DataAccess.Repositories
             context.Polls.Add(poll);
             context.SaveChanges();
         }
+
         public IQueryable<Poll> GetPolls()
         {
             return context.Polls;
         }
 
-        public Poll GetPollById(int id)
+        public Poll? GetPollById(int id)
         {
             return context.Polls.FirstOrDefault(p => p.Id == id);
         }
@@ -37,6 +34,5 @@ namespace DataAccess.Repositories
             context.Polls.Update(poll);
             context.SaveChanges();
         }
-
     }
 }

@@ -1,13 +1,14 @@
-﻿using DataAccess.Repositories;
+﻿using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace Presentation.Controllers
 {
     public class PollController : Controller
     {
         [HttpGet]
-        public IActionResult Index([FromServices] PollFileRepository pollRepository)
+        public IActionResult Index([FromServices] IPollRepository pollRepository)
         {
             var polls = pollRepository.GetPolls().OrderByDescending(p => p.DateCreated);
             return View(polls);
@@ -20,7 +21,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreatePoll(Poll poll, [FromServices] PollFileRepository pollRepository)
+        public IActionResult CreatePoll(Poll poll, [FromServices] IPollRepository pollRepository)
         {
             if (ModelState.IsValid)
             {
@@ -36,16 +37,16 @@ namespace Presentation.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int id, [FromServices] PollRepository pollRepository)
+        public IActionResult Details(int id, [FromServices] IPollRepository pollRepository)
         {
             var poll = pollRepository.GetPollById(id);
-            if (poll == null) 
+            if (poll == null)
                 return NotFound();
             return View(poll);
         }
 
         [HttpPost]
-        public IActionResult Vote(int id, string selectedOption, [FromServices] PollRepository pollRepository)
+        public IActionResult Vote(int id, string selectedOption, [FromServices] IPollRepository pollRepository)
         {
             var poll = pollRepository.GetPollById(id);
             if (poll == null)
@@ -55,15 +56,9 @@ namespace Presentation.Controllers
             {
                 switch (selectedOption)
                 {
-                    case "Option1":
-                        poll.Option1VotesCount++;
-                        break;
-                    case "Option2":
-                        poll.Option2VotesCount++;
-                        break;
-                    case "Option3":
-                        poll.Option3VotesCount++;
-                        break;
+                    case "Option1": poll.Option1VotesCount++; break;
+                    case "Option2": poll.Option2VotesCount++; break;
+                    case "Option3": poll.Option3VotesCount++; break;
                 }
 
                 pollRepository.Vote(poll);
@@ -71,6 +66,5 @@ namespace Presentation.Controllers
 
             return RedirectToAction("Details", new { id });
         }
-
     }
 }
