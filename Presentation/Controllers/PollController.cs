@@ -43,5 +43,34 @@ namespace Presentation.Controllers
                 return NotFound();
             return View(poll);
         }
+
+        [HttpPost]
+        public IActionResult Vote(int id, string selectedOption, [FromServices] PollRepository pollRepository)
+        {
+            var poll = pollRepository.GetPollById(id);
+            if (poll == null)
+                return NotFound();
+
+            if (!string.IsNullOrEmpty(selectedOption))
+            {
+                switch (selectedOption)
+                {
+                    case "Option1":
+                        poll.Option1VotesCount++;
+                        break;
+                    case "Option2":
+                        poll.Option2VotesCount++;
+                        break;
+                    case "Option3":
+                        poll.Option3VotesCount++;
+                        break;
+                }
+
+                pollRepository.Vote(poll);
+            }
+
+            return RedirectToAction("Details", new { id });
+        }
+
     }
 }

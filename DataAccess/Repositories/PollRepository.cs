@@ -31,5 +31,12 @@ namespace DataAccess.Repositories
         {
             return context.Polls.FirstOrDefault(p => p.Id == id);
         }
+
+        public void Vote(Poll poll)
+        {
+            context.Polls.Update(poll);
+            context.SaveChanges();
+        }
+
     }
 }
