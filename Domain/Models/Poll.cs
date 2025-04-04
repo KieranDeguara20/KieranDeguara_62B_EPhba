@@ -21,5 +21,6 @@ namespace Domain.Models
         public int Option3VotesCount { get; set; }
 
         public DateTime DateCreated { get; set; }
+        public List<string> Voters { get; set; } = new List<string>(); // Track voters
     }
 }

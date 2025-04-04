@@ -1,5 +1,6 @@
 ﻿using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
@@ -46,11 +47,17 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public IActionResult Vote(int id, string selectedOption, [FromServices] IPollRepository pollRepository)
+        public IActionResult Vote(int id, string selectedOption, [FromServices] IPollRepository pollRepository, [FromServices] UserManager<IdentityUser> userManager)
         {
             var poll = pollRepository.GetPollById(id);
             if (poll == null)
                 return NotFound();
+
+            var userId = userManager.GetUserId(User);
+            if (poll.Voters.Contains(userId))
+            {
+                return RedirectToAction("Details", new { id, message = "You have already voted in this poll." });
+            }
 
             if (!string.IsNullOrEmpty(selectedOption))
             {
@@ -60,10 +67,9 @@ namespace Presentation.Controllers
                     case "Option2": poll.Option2VotesCount++; break;
                     case "Option3": poll.Option3VotesCount++; break;
                 }
-
+                poll.Voters.Add(userId); 
                 pollRepository.Vote(poll);
             }
-
             return RedirectToAction("Details", new { id });
         }
     }
