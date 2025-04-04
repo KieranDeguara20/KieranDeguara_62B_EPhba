@@ -7,7 +7,7 @@ namespace Presentation.Controllers
     public class PollController : Controller
     {
         [HttpGet]
-        public IActionResult Index([FromServices] PollRepository pollRepository)
+        public IActionResult Index([FromServices] PollFileRepository pollRepository)
         {
             var polls = pollRepository.GetPolls().OrderByDescending(p => p.DateCreated);
             return View(polls);
@@ -20,7 +20,7 @@ namespace Presentation.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreatePoll(Poll poll, [FromServices] PollRepository pollRepository)
+        public IActionResult CreatePoll(Poll poll, [FromServices] PollFileRepository pollRepository)
         {
             if (ModelState.IsValid)
             {

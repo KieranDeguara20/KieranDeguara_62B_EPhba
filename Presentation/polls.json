@@ -1,0 +1,13 @@
+[
+  {
+    "Id": 1,
+    "Title": "testing",
+    "Option1Text": "123",
+    "Option2Text": "123",
+    "Option3Text": "123",
+    "Option1VotesCount": 0,
+    "Option2VotesCount": 0,
+    "Option3VotesCount": 0,
+    "DateCreated": "2025-04-04T19:17:26.3418034+02:00"
+  }
+]
