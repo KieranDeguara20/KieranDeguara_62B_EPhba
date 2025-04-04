@@ -21,6 +21,10 @@ namespace DataAccess.Repositories
         {
             context.Polls.Add(poll);
             context.SaveChanges();
-        }   
+        }
+        public IQueryable<Poll> GetPolls()
+        {
+            return context.Polls;
+        }
     }
 }
