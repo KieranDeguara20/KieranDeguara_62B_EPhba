@@ -1,5 +1,6 @@
 ﻿using Domain.Interfaces;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace Presentation.Controllers
                 poll.Option3VotesCount = 0;
 
                 pollRepository.CreatePoll(poll);
-                return View();
+                return RedirectToAction("Index");
             }
             return View(poll);
         }
@@ -46,6 +47,7 @@ namespace Presentation.Controllers
             return View(poll);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult Vote(int id, string selectedOption, [FromServices] IPollRepository pollRepository, [FromServices] UserManager<IdentityUser> userManager)
         {
@@ -72,5 +74,12 @@ namespace Presentation.Controllers
             }
             return RedirectToAction("Details", new { id });
         }
+
+        [HttpGet]
+        public IActionResult Vote(int id)
+        { 
+            return RedirectToAction("Details", new { id = id });
+        }
+
     }
 }
